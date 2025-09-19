@@ -1,1 +1,1 @@
-# -Class-
+CLASS ITEM
