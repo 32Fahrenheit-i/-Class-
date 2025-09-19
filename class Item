@@ -1,0 +1,130 @@
+class Item:
+    def __init__(self, name="Unknown Item"):
+        """Constructor - ตั้งค่าเริ่มต้นให้ price เป็น 0"""
+        self.__price = 0.0  # private attribute
+        self.__name = name  # private attribute สำหรับชื่อสินค้า
+        self.__quantity = 1  # private attribute สำหรับจำนวน
+    
+    def getPrice(self):
+        """Method getPrice() - return ค่า price กลับไป"""
+        return self.__price
+    
+    def setPrice(self, p):
+        """Method setPrice(float p) - รับค่า float และอัปเดตค่า price"""
+        if p < 0:
+            raise ValueError("ราคาต้องเป็นค่าบวก")
+        self.__price = float(p)
+    
+    def getName(self):
+        """Method getName() - return ชื่อสินค้า"""
+        return self.__name
+    
+    def setName(self, name):
+        """Method setName() - ตั้งชื่อสินค้า"""
+        self.__name = str(name)
+    
+    def getQuantity(self):
+        """Method getQuantity() - return จำนวนสินค้า"""
+        return self.__quantity
+    
+    def setQuantity(self, qty):
+        """Method setQuantity() - ตั้งจำนวนสินค้า"""
+        if qty < 0:
+            raise ValueError("จำนวนต้องเป็นค่าบวก")
+        self.__quantity = int(qty)
+    
+    def getTotalPrice(self):
+        """Method getTotalPrice() - คำนวณราคารวม (ราคา x จำนวน)"""
+        return self.__price * self.__quantity
+    
+    def applyDiscount(self, discount_percent):
+        """Method applyDiscount() - ลดราคาเป็นเปอร์เซ็นต์"""
+        if 0 <= discount_percent <= 100:
+            self.__price = self.__price * (1 - discount_percent / 100)
+        else:
+            raise ValueError("เปอร์เซ็นต์ลดราคาต้องอยู่ระหว่าง 0-100")
+    
+    def __str__(self):
+        """Method __str__() - แสดงข้อมูลสินค้า"""
+        return f"Item: {self.__name}, Price: {self.__price:.2f}, Quantity: {self.__quantity}, Total: {self.getTotalPrice():.2f}"
+    
+    def __repr__(self):
+        """Method __repr__() - แสดงข้อมูลสำหรับ debugging"""
+        return f"Item(name='{self.__name}', price={self.__price}, quantity={self.__quantity})"
+
+# ตัวอย่างการใช้งาน Class Item
+if __name__ == "__main__":
+    print("=== LAB 2: Enhanced Class Item Demo ===")
+    
+    # สร้าง Object จาก Class Item
+    item1 = Item("iPhone 15")
+    item2 = Item("Samsung Galaxy")
+    item3 = Item()  # ใช้ชื่อเริ่มต้น
+    
+    print("=== 1. การตั้งค่าพื้นฐาน ===")
+    print(f"Item 1: {item1}")
+    print(f"Item 2: {item2}")
+    print(f"Item 3: {item3}")
+    
+    print("\n=== 2. การตั้งราคาและจำนวน ===")
+    item1.setPrice(25000.00)
+    item1.setQuantity(2)
+    item2.setPrice(22000.00)
+    item2.setQuantity(1)
+    item3.setName("iPad Pro")
+    item3.setPrice(35000.00)
+    item3.setQuantity(1)
+    
+    print(f"Item 1: {item1}")
+    print(f"Item 2: {item2}")
+    print(f"Item 3: {item3}")
+    
+    print("\n=== 3. การคำนวณราคารวม ===")
+    print(f"iPhone 15 ราคารวม: {item1.getTotalPrice():.2f} บาท")
+    print(f"Samsung Galaxy ราคารวม: {item2.getTotalPrice():.2f} บาท")
+    print(f"iPad Pro ราคารวม: {item3.getTotalPrice():.2f} บาท")
+    
+    print("\n=== 4. การลดราคา ===")
+    print(f"iPhone 15 ก่อนลดราคา: {item1.getPrice():.2f} บาท")
+    item1.applyDiscount(10)  # ลด 10%
+    print(f"iPhone 15 หลังลดราคา 10%: {item1.getPrice():.2f} บาท")
+    
+    item2.applyDiscount(15)  # ลด 15%
+    print(f"Samsung Galaxy หลังลดราคา 15%: {item2.getPrice():.2f} บาท")
+    
+    print("\n=== 5. การแสดงผลด้วย __str__ และ __repr__ ===")
+    print(f"__str__: {item1}")
+    print(f"__repr__: {repr(item1)}")
+    
+    print("\n=== 6. การทดสอบ Error Handling ===")
+    try:
+        item1.setPrice(-100)  # ราคาติดลบ
+    except ValueError as e:
+        print(f"Error: {e}")
+    
+    try:
+        item1.setQuantity(-5)  # จำนวนติดลบ
+    except ValueError as e:
+        print(f"Error: {e}")
+    
+    try:
+        item1.applyDiscount(150)  # เปอร์เซ็นต์เกิน 100
+    except ValueError as e:
+        print(f"Error: {e}")
+    
+    print("\n=== 7. การทดสอบ Private Attribute ===")
+    try:
+        print(f"พยายามเข้าถึง __price โดยตรง: {item1.__price}")
+    except AttributeError as e:
+        print(f"Error: {e}")
+        print("ไม่สามารถเข้าถึง private attribute __price ได้โดยตรง")
+        print("ต้องใช้ getPrice() method แทน")
+    
+    print("\n=== 8. สรุปข้อมูลสินค้าทั้งหมด ===")
+    items = [item1, item2, item3]
+    total_value = 0
+    for i, item in enumerate(items, 1):
+        print(f"สินค้า {i}: {item}")
+        total_value += item.getTotalPrice()
+    
+    print(f"\nมูลค่ารวมทั้งหมด: {total_value:.2f} บาท")
